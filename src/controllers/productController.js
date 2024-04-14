@@ -3,8 +3,17 @@ const ApiFeatures = require('../utils/apiFeatures')
 const catchAsync = require('../utils/catchAsync')
 const sendResponse = require('../utils/sendResponse')
 
+const createProduct = catchAsync(async (req, res, next) => {
+  const newProduct = await Product.create(req.body)
+  sendResponse(res, 200, 'Prodcut fetched successfully', {
+    product: newProduct
+  })
+})
+
 const getAllProducts = catchAsync(async (req, res, next) => {
-  const query = Product.find().select('name imageUrl price rating')
+  const query = Product.find().select(
+    'name imageUrl price rating additionalImageUrls rating'
+  )
   const featuredQuery = new ApiFeatures(query, req.query)
     .filter()
     .sort()
@@ -19,4 +28,15 @@ const getProduct = catchAsync(async (req, res, next) => {
   sendResponse(res, 200, 'Prodcut fetched successfully', { product })
 })
 
-module.exports = { getAllProducts, getProduct }
+const searchProduct = catchAsync(async (req, res, next) => {
+  const { query } = req.params
+
+  const products = await Product.find({ $text: { $search: query } })
+    .select('name _id imageUrl')
+    .limit(8)
+
+  sendResponse(res, 200, 'Prodcut fetched successfully', { products })
+  res.end()
+})
+
+module.exports = { createProduct, getAllProducts, getProduct, searchProduct }

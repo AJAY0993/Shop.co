@@ -2,21 +2,15 @@ const { promisify } = require('util')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const catchAsync = require('../utils/catchAsync')
+const AppError = require('../utils/AppError')
 
 const isAuthenticated = catchAsync(async (req, res, next) => {
   const token = req.cookies.jwt
-  if (!token) {
-    res.json({
-      message: 'Please provide required token'
-    })
-  }
+  if (!token) return next(new AppError(401, 'Please provide credentials'))
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+  console.log(decoded)
   const user = await User.findById(decoded.id)
-  if (!user) {
-    res.json({
-      message: 'User not found'
-    })
-  }
+  if (!user) return next(new AppError(401, 'User not found'))
   req.user = user
   next()
 })

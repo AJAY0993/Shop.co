@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const validator = require('validator')
-const Cart = require('./Cart')
 
 const { Schema } = mongoose
 const { ObjectId } = Schema
@@ -20,7 +19,10 @@ const userSchema = new Schema({
       message: 'Please provide  a valid email'
     }
   },
-  cart: { type: ObjectId, ref: 'Cart' },
+  profilePic: {
+    type: String,
+    default: 'https://i.ibb.co/mBXRT6g/profile-user.png'
+  },
   isPremium: {
     type: Boolean,
     default: false
@@ -44,6 +46,7 @@ const userSchema = new Schema({
 })
 
 userSchema.methods.isPasswordCorrect = async function (plainPassword) {
+  console.log('from is password correct')
   const result = await bcrypt.compare(plainPassword, this.password)
   return result
 }
@@ -51,12 +54,6 @@ userSchema.methods.isPasswordCorrect = async function (plainPassword) {
 userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10)
   this.confirmPassword = undefined
-
-  const cart = await Cart.create({
-    user: this._id,
-    name: `${this.username}'s cart`
-  })
-  this.cart = cart._id
   next()
 })
 

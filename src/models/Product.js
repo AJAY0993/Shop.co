@@ -58,15 +58,32 @@ const productSchema = new Schema(
       type: Boolean,
       default: false
     },
+    rating: {
+      rate: {
+        type: Number,
+        default: 0
+      },
+      count: {
+        type: Number,
+        default: 0
+      }
+    },
     url: {
       type: String
     }
   },
   {
-    toJSON: true,
-    toObject: true
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 )
+
+productSchema.index({
+  name: 'text',
+  category: 'text',
+  brandName: 'text',
+  description: 'text'
+})
 
 productSchema.virtual('discountedPrice').get(function () {
   return this.price.current.value - this.price.current.discount / 100
