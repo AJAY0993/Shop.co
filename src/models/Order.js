@@ -9,12 +9,16 @@ const orderSchema = new Schema({
     ref: 'User'
   },
   items: {
-    type: [{ product: ObjectId, ref: 'Product' }]
+    type: [
+      {
+        product: { type: ObjectId, ref: 'Product' },
+        quantity: Number
+      }
+    ]
   },
   totalAmount: {
     type: Number
   },
-
   shippingAdderess: {
     type: String
   },
@@ -25,8 +29,20 @@ const orderSchema = new Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['credit card', 'debit card', 'paypal', 'UPI']
+    enum: ['card', 'credit card', 'debit card', 'paypal', 'UPI']
   }
+})
+
+orderSchema.pre(/^find/, async function (next) {
+  this.populate({
+    path: 'customer',
+    select: '_id username profilePic '
+  })
+  this.populate({
+    path: 'items.product',
+    select: '_id name imageUrl price'
+  })
+  next()
 })
 
 const Order = mongoose.model('Order', orderSchema)
