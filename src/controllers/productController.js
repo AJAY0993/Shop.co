@@ -3,14 +3,14 @@ const ApiFeatures = require('../utils/apiFeatures')
 const catchAsync = require('../utils/catchAsync')
 const sendResponse = require('../utils/sendResponse')
 
-const createProduct = catchAsync(async (req, res, next) => {
+const createProduct = catchAsync(async (req, res) => {
   const newProduct = await Product.create(req.body)
   sendResponse(res, 200, 'Prodcut fetched successfully', {
     product: newProduct
   })
 })
 
-const getAllProducts = catchAsync(async (req, res, next) => {
+const getAllProducts = catchAsync(async (req, res) => {
   const query = Product.find().select(
     'name imageUrl price rating additionalImageUrls rating'
   )
@@ -23,12 +23,12 @@ const getAllProducts = catchAsync(async (req, res, next) => {
   sendResponse(res, 200, 'Prodcuts fetched successfully', { products })
 })
 
-const getProduct = catchAsync(async (req, res, next) => {
+const getProduct = catchAsync(async (req, res) => {
   const product = await Product.findById(req.params.id)
   sendResponse(res, 200, 'Prodcut fetched successfully', { product })
 })
 
-const searchProduct = catchAsync(async (req, res, next) => {
+const searchProduct = catchAsync(async (req, res) => {
   const { query } = req.params
 
   const products = await Product.find({ $text: { $search: query } })
@@ -39,4 +39,9 @@ const searchProduct = catchAsync(async (req, res, next) => {
   res.end()
 })
 
-module.exports = { createProduct, getAllProducts, getProduct, searchProduct }
+module.exports = {
+  createProduct,
+  getAllProducts,
+  getProduct,
+  searchProduct
+}

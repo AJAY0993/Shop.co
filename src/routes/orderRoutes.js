@@ -1,5 +1,8 @@
 const express = require('express')
-const { isAuthorized } = require('../middlewares/authMiddlewares')
+const {
+  isAuthorized,
+  isAuthenticated
+} = require('../middlewares/authMiddlewares')
 const {
   getOrderById,
   getMyOrders,
@@ -10,7 +13,7 @@ const orderRouter = express.Router()
 
 orderRouter.route('/').get(isAuthorized('admin'), getOrders)
 
-orderRouter.route('/me').get(isAuthorized('admin'), getMyOrders)
+orderRouter.route('/me').get(isAuthenticated, getMyOrders)
 
 orderRouter.route('/:id').get(getOrderById)
 

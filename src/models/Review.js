@@ -7,7 +7,8 @@ const reviewSchema = new Schema(
   {
     user: {
       type: ObjectId,
-      ref: 'User'
+      ref: 'User',
+      required: [true, 'Please provide user information']
     },
     product: {
       type: ObjectId,

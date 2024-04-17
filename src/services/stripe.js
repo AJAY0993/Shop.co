@@ -54,9 +54,13 @@ const checkoutService = async (req, res, next) => {
       totalAmount: session.amount_total / 100 / 84
     })
 
+    // stripe.checkout.sessions.on('checkout.session.completed', () => {
+    //   console.log('Pament succesfull')
+    // })
     res.json({ status: 'success', data: { session } })
   } catch (err) {
     await Order.findByIdAndDelete(newOrder._id)
+    console.log(err)
     next(
       new AppError(
         500,

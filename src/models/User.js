@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const validator = require('validator')
 
 const { Schema } = mongoose
-const { ObjectId } = Schema
 
 const userSchema = new Schema({
   username: {
@@ -19,10 +18,14 @@ const userSchema = new Schema({
       message: 'Please provide  a valid email'
     }
   },
+  MobileNumber: Number,
   profilePic: {
     type: String,
     default: 'https://i.ibb.co/mBXRT6g/profile-user.png'
   },
+  cloudinaryId: String,
+  address: String,
+
   isPremium: {
     type: Boolean,
     default: false
@@ -46,7 +49,6 @@ const userSchema = new Schema({
 })
 
 userSchema.methods.isPasswordCorrect = async function (plainPassword) {
-  console.log('from is password correct')
   const result = await bcrypt.compare(plainPassword, this.password)
   return result
 }

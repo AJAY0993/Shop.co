@@ -1,7 +1,7 @@
 const multer = require('multer')
 const AppError = require('../utils/AppError')
 
-const multerStorage = multer.memoryStorage()
+const multerStorage = multer.diskStorage({})
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.split('/')[0] === 'image') {
     cb(null, true)

@@ -8,7 +8,6 @@ const isAuthenticated = catchAsync(async (req, res, next) => {
   const token = req.cookies.jwt
   if (!token) return next(new AppError(401, 'Please provide credentials'))
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
-  console.log(decoded)
   const user = await User.findById(decoded.id)
   if (!user) return next(new AppError(401, 'User not found'))
   req.user = user
