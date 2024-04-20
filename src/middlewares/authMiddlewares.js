@@ -1,3 +1,6 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable operator-linebreak */
+/* eslint-disable indent */
 const { promisify } = require('util')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
@@ -11,7 +14,7 @@ const isAuthenticated = catchAsync(async (req, res, next) => {
   const user = await User.findById(decoded.id)
   if (!user) return next(new AppError(401, 'User not found'))
   req.user = user
-  next()
+  return next()
 })
 
 const isAuthorized =

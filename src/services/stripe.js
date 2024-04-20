@@ -1,8 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-require('dotenv').config({ path: '../../.env' })
-const stripe = require('stripe')(
-  'sk_test_51P4fQhSGowosMs9tvefZasqKK0RqNHJt1xKT1KXIaKoOUzJC37eZH5GzvHnsP0nZ2kXYgfvGIutRARP9gIPHO1jM00eaf5dfWV'
-)
+require('dotenv').config({ path: '../.env' })
+const stripe = require('stripe')(process.env.STRIPE_TEST_KEY)
 const Order = require('../models/Order')
 const AppError = require('../utils/AppError')
 
@@ -54,13 +52,9 @@ const checkoutService = async (req, res, next) => {
       totalAmount: session.amount_total / 100 / 84
     })
 
-    // stripe.checkout.sessions.on('checkout.session.completed', () => {
-    //   console.log('Pament succesfull')
-    // })
     res.json({ status: 'success', data: { session } })
   } catch (err) {
     await Order.findByIdAndDelete(newOrder._id)
-    console.log(err)
     next(
       new AppError(
         500,

@@ -4,12 +4,12 @@ const { isAuthenticated } = require('../middlewares/authMiddlewares')
 
 const reviewRouter = express.Router({ mergeParams: true })
 
+reviewRouter.use(isAuthenticated)
+
 reviewRouter
   .route('/')
   .get(reviewController.getReviews)
   .post(isAuthenticated, reviewController.createReview)
-
-reviewRouter.use(isAuthenticated)
 
 reviewRouter.route('/reviewId').delete(reviewController.deleteReview)
 

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const validator = require('validator')
 
 const { Schema } = mongoose
+const { ObjectId } = Schema
 
 const userSchema = new Schema({
   username: {
@@ -18,18 +19,21 @@ const userSchema = new Schema({
       message: 'Please provide  a valid email'
     }
   },
-  MobileNumber: Number,
+  MobileNumber: {
+    type: Number,
+    validate: [validator.isMobilePhone, 'Please provide a valid phone number']
+  },
+  address: String,
+  wishList: { type: [{ type: ObjectId, ref: 'Product' }], default: [] },
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
   profilePic: {
     type: String,
     default: 'https://i.ibb.co/mBXRT6g/profile-user.png'
   },
   cloudinaryId: String,
-  address: String,
-
-  isPremium: {
-    type: Boolean,
-    default: false
-  },
   password: {
     type: String,
     minLength: [8, 'Password must be 8 character long'],

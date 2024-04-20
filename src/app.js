@@ -7,6 +7,7 @@ const productRouter = require('./routes/productRoutes')
 const userRouter = require('./routes/userRoutes')
 const handleError = require('./middlewares/globalErrorMiddleware')
 const orderRouter = require('./routes/orderRoutes')
+const wishListRouter = require('./routes/wishListRoutes')
 const AppError = require('./utils/AppError')
 const checkoutService = require('./services/stripe')
 const { isAuthenticated } = require('./middlewares/authMiddlewares')
@@ -48,17 +49,12 @@ app.use(express.static('public'))
 //   }
 //   next()
 // })
-// app.use((req, res, next) => {
-//   res.on('finish', () => {
-//     console.log('Response headers:', res.getHeaders())
-//   })
-//   next()
-// })
 
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/reviews', reviewRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/orders', orderRouter)
+app.use('/api/v1/wishlist', wishListRouter)
 app.use('/api/v1/checkout', isAuthenticated, checkoutService)
 
 app.get('*', (req, res) => {
