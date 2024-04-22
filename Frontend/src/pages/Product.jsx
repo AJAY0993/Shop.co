@@ -1,6 +1,5 @@
 import ProductImages from "../features/Product/ProductImages";
 import ProductOverview from "../features/Product/ProductOverview";
-import ProductReviewsContainer from "../features/Product/ProductReviewsContainer";
 import Footer from "../ui/Footer";
 import Header from "../ui/Header";
 import NewsletterSubscriptionForm from "../ui/NewsletterSubscriptionForm";
@@ -9,6 +8,7 @@ import Slider from "../ui/Slider";
 import Container from "./../ui/Container";
 import useProduct from "../features/Product/useProduct";
 import Spinner from "../ui/Spinner";
+import ProductReviewsContainer from "./../features/Product/ProductReviews/ProductReviewsContainer";
 
 function Product() {
   const { product, isError, isLoading, error } = useProduct();

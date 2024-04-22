@@ -16,6 +16,12 @@ const reviewSchema = new Schema(
     },
     review: {
       type: String
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      default: 3
     }
   },
   {
@@ -30,7 +36,7 @@ const reviewSchema = new Schema(
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
-    select: 'name profilePic'
+    select: 'username'
   })
   next()
 })

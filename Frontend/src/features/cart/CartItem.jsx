@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import Row from "../../ui/Row";
 import Button from "./../../ui/Button";
@@ -6,6 +7,7 @@ import CartController from "./CartController";
 import { useDispatch, useSelector } from "react-redux";
 
 function CartItem({ cartItem }) {
+  const navigate = useNavigate();
   const itemQuantity = useSelector(getItemQuantity(cartItem._id));
   const itemTotalPrice = (itemQuantity * cartItem.price.current.value).toFixed(
     2,
@@ -13,6 +15,10 @@ function CartItem({ cartItem }) {
 
   const dispatch = useDispatch();
   const removeItemFromCart = () => dispatch(removeItem(cartItem._id));
+  const redirectToProductPage = (e) => {
+    e.stopPropagation();
+    navigate(`/shop/${cartItem._id}`);
+  };
   return (
     <div>
       <Row classes="py-2 gap-[.75rem] md:gap-4 items-center relative">
@@ -21,7 +27,10 @@ function CartItem({ cartItem }) {
           src={cartItem.imageUrl}
         />
         <div>
-          <h5 className=" max-w-[80%] text-base font-semibold md:text-xl">
+          <h5
+            className=" max-w-[80%] cursor-pointer text-base font-semibold md:text-xl"
+            onClick={redirectToProductPage}
+          >
             {cartItem.name}
           </h5>
           <p className="text-[.8rem] md:text-base">
