@@ -12,9 +12,6 @@ function useAddToWishList() {
         queryKey: ["wishlist"],
       });
     },
-    onError: (err) => {
-      toast.error(err.message);
-    },
   });
   return { addToWishList, isAdding };
 }

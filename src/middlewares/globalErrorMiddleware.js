@@ -54,12 +54,11 @@ const sendErrorProd = (err, res) => {
   }
 }
 
-module.exports = (err, req, res, next) => {
-  console.log(err)
-
-  err.statusCode = err.statusCode || 500
-  err.status = err.status || 'error'
-
+module.exports = (runTimeError, req, res, next) => {
+  const err = { ...runTimeError }
+  err.statusCode = runTimeError.statusCode || 500
+  err.status = runTimeError.status || 'error'
+  err.message = runTimeError.message
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res)
   } else if (process.env.NODE_ENV === 'production') {
@@ -69,7 +68,6 @@ module.exports = (err, req, res, next) => {
     if (err.name === 'ValidationError') error = handleValidationErrorDB(error)
     if (err.name === 'JsonWebTokenError') error = handleJWTError()
     if (err.name === 'TokenExpiredError') error = handleJWTExpiredError()
-
     sendErrorProd(error, res)
   }
 }

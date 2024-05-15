@@ -63,4 +63,36 @@ const checkoutService = async (req, res, next) => {
     )
   }
 }
-module.exports = checkoutService
+
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET
+
+const webhookHandler = (request, response, next) => {
+  const sig = request.headers['stripe-signature']
+
+  let event
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret)
+  } catch (err) {
+    return next(new AppError(400, `Webhook Error: ${err.message}`))
+  }
+
+  // Handle the event
+  console.log(event.data.object)
+  switch (event.type) {
+    case 'charge.succeeded':
+      // Then define and call a function to handle the event charge.succeeded
+      break
+    case 'checkout.session.completed':
+      console.log(event.data.object)
+      break
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`)
+  }
+
+  // Return a 200 response to acknowledge receipt of the event
+  response.send()
+}
+
+module.exports = { webhookHandler, checkoutService }

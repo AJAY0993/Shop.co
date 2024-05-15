@@ -30,6 +30,11 @@ function ProductReviewsContainer() {
           )}
         </Row>
         {showCreateReviewForm && <CreateReview close={close} />}
+        {(!reviews || reviews.length == 0) && (
+          <Subtitle className="text-center">
+            No reviews about this product yet! Be the first to write a review
+          </Subtitle>
+        )}
         <Row classes="flex-wrap gap-4">
           {reviews?.map((review) => (
             <ProductReview
@@ -39,9 +44,16 @@ function ProductReviewsContainer() {
             />
           ))}
         </Row>
-        <Button type="secondary" className="mx-auto my-4 max-w-52 " disabled={isLoading}>
-          Load more
-        </Button>
+
+        {reviews?.length > 0 && (
+          <Button
+            type="secondary"
+            className="mx-auto my-4 max-w-52 "
+            disabled={isLoading}
+          >
+            Load more
+          </Button>
+        )}
       </div>
     </Container>
   );

@@ -5,12 +5,12 @@ function ProductCatalog() {
     <div className="m-4 rounded-lg bg-stone-300 px-4 py-2">
       <Title>Browse by categories</Title>
       <CatalogRow>
-        <CatlogItem name={"shirts"} img="/shirts.webp" />
-        <CatlogItem name={"jeans"} img="/jeans.webp" grow={true} />
+        <CatlogItem name={"shirts"} img="shirts.webp" />
+        <CatlogItem name={"jeans"} img="jeans.webp" grow={true} />
       </CatalogRow>
       <CatalogRow>
         <CatlogItem name={"shoes"} img="shoes.webp" grow={true} />
-        <CatlogItem name={"accessories"} img="/accessories.webp" />
+        <CatlogItem name={"accessories"} img="accessories.webp" />
       </CatalogRow>
     </div>
   );

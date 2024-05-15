@@ -9,7 +9,7 @@ const handleError = require('./middlewares/globalErrorMiddleware')
 const orderRouter = require('./routes/orderRoutes')
 const wishListRouter = require('./routes/wishListRoutes')
 const AppError = require('./utils/AppError')
-const checkoutService = require('./services/stripe')
+const stripe = require('./services/stripe')
 const { isAuthenticated } = require('./middlewares/authMiddlewares')
 const reviewRouter = require('./routes/reviewRoutes')
 
@@ -27,35 +27,19 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(express.static('public'))
-// app.use((req, res, next) => {
-//   if (req.method === 'GET') {
-//     cors({
-//       origin: true,
-//       methods: 'GET',
-//       credentials: true,
-//     })(req, res, next)
-//   } else {
-//     cors({
-//       origin: (origin, cb) => {
-//         if (!origin || origin.startsWith('http://localhost')) {
-//           cb(null, true)
-//         } else {
-//           cb(new Error('Not Allowed'), null)
-//         }
-//       },
-//       credentials: true,
-//       methods: 'GET,POST,PUT,PATCH,DELETE',
-//     })
-//   }
-//   next()
-// })
 
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/reviews', reviewRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/orders', orderRouter)
 app.use('/api/v1/wishlist', wishListRouter)
-app.use('/api/v1/checkout', isAuthenticated, checkoutService)
+app.use('/api/v1/checkout', isAuthenticated, stripe.checkoutService)
+app.post(
+  '/webhook',
+  express.json({ type: 'application/json' }),
+  stripe.webhookHandler
+)
+app.post('/stripe-checkout', isAuthenticated, stripe.checkoutService)
 
 app.get('*', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`)

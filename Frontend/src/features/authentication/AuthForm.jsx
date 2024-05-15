@@ -56,7 +56,7 @@ const Row = forwardRef(function ({ label, placeholder, name }, ref) {
         {label}
       </label>
       <input
-        className="flex-grow rounded-lg border-[1px] border-stone-300 px-4 ring-stone-500 transition-all focus:border-0 focus:outline-0 focus:ring-4 md:py-2"
+        className="flex-grow rounded-lg border-[1px] border-stone-300 px-4 ring-4 ring-transparent transition-all focus:outline-0 focus:ring-stone-500 md:py-2"
         placeholder={placeholder}
         name={name}
         id={name}

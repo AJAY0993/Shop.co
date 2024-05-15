@@ -12,9 +12,6 @@ function useRemoveFromWishList() {
         queryKey: ["wishlist"],
       });
     },
-    onError: (err) => {
-      toast.error(err.message);
-    },
   });
   return { removeFromWishList, isPending: isRemoving };
 }
