@@ -4,7 +4,6 @@ export const fetchProductReviews = async (id) => {
   try {
     const res = await axios(`products/${id}/reviews`);
     const data = res.data;
-    console.log(data);
     return data.data.reviews;
   } catch (error) {
     throw new Error(error.response.data.message);
@@ -20,7 +19,6 @@ export const createReview = async ({ id, review }) => {
       },
     });
     const data = res.data;
-    console.log("data :", data);
     return data.data.review;
   } catch (error) {
     throw new Error(error.response.data.message);
