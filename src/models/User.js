@@ -1,27 +1,30 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-const validator = require('validator')
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const validator = require('validator');
 
-const { Schema } = mongoose
-const { ObjectId } = Schema
+const { Schema } = mongoose;
+const { ObjectId } = Schema;
 
 const userSchema = new Schema({
   username: {
     type: String,
-    required: [true]
+    required: [true],
+    trim: true
   },
   email: {
     type: String,
     required: [true, 'Please provide your email'],
+    trim: true,
     unique: [true, 'Email already exist'],
     validate: {
       validator: (value) => validator.isEmail(value),
       message: 'Please provide  a valid email'
     }
   },
-  MobileNumber: {
-    type: Number,
-    validate: [validator.isMobilePhone, 'Please provide a valid phone number']
+  mobileNumber: {
+    type: String,
+    validate: [validator.isMobilePhone, 'Please provide a valid phone number'],
+    trim: true
   },
   address: String,
   wishList: { type: [{ type: ObjectId, ref: 'Product' }], default: [] },
@@ -45,23 +48,23 @@ const userSchema = new Schema({
     required: [true, 'Please provide confirm password'],
     validate: {
       validator(value) {
-        return value === this.password
+        return value === this.password;
       },
       message: 'Passwords do not match'
     }
   }
-})
+});
 
 userSchema.methods.isPasswordCorrect = async function (plainPassword) {
-  const result = await bcrypt.compare(plainPassword, this.password)
-  return result
-}
+  const result = await bcrypt.compare(plainPassword, this.password);
+  return result;
+};
 
 userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 10)
-  this.confirmPassword = undefined
-  next()
-})
+  this.password = await bcrypt.hash(this.password, 10);
+  this.confirmPassword = undefined;
+  next();
+});
 
-const User = mongoose.model('User', userSchema)
-module.exports = User
+const User = mongoose.model('User', userSchema);
+module.exports = User;

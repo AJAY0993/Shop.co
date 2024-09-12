@@ -3,6 +3,10 @@ import AuthForm from "./AuthForm";
 import useLogin from "./useLogin";
 import toast from "react-hot-toast";
 
+const guestCredentials = {
+  email: "test@email.com",
+  password: "loremipsum",
+};
 function LoginForm() {
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -39,6 +43,7 @@ function LoginForm() {
             label="password"
             placeholder="password"
             name="password"
+            type="password"
             ref={passwordRef}
           />
         </AuthForm.Form>
@@ -48,6 +53,17 @@ function LoginForm() {
           linkText="sign up"
           to="/signup"
         />
+        <p className="my-2">
+          Continue with{" "}
+          <button
+            className="bg-transparent font-bold"
+            onClick={() => {
+              login(guestCredentials);
+            }}
+          >
+            guest credentials
+          </button>
+        </p>
       </AuthForm.Container>
     </AuthForm>
   );

@@ -1,10 +1,4 @@
 import Button from "./Button";
-const brands = [
-  {
-    src: "",
-    alt: "",
-  },
-];
 
 function Hero() {
   return (
@@ -43,7 +37,7 @@ function Hero() {
             </li>
           </ul>
         </div>
-        <div className="w-full">
+        <div className="w-full md:hidden">
           <picture>
             <source srcSet="/heroImag.png" media="(min-width:750px)" />
             <img src="/heroImagesm.png" />

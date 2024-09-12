@@ -5,6 +5,10 @@ export default {
     extend: {
       backgroundImage: {
         "hero-pattern": "url('/heroImage.png')",
+        shirts: "url('/shirts.jpeg')",
+        jeans: "url('/jeans.jpg')",
+        shoes: "url('/shoes.jpg')",
+        accessories: "url(/accessories.jpeg)",
       },
       flexGrow: {
         5: "5",

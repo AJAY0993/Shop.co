@@ -1,49 +1,50 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-const { Schema } = mongoose
-const { ObjectId } = Schema
+const { Schema } = mongoose;
+const { ObjectId } = Schema;
 
-const orderSchema = new Schema({
-  customer: {
-    type: ObjectId,
-    ref: 'User'
+const orderSchema = new Schema(
+  {
+    customer: {
+      type: ObjectId,
+      ref: 'User'
+    },
+    shippingAdderess: {
+      type: String
+    },
+    mobileNumber: String,
+    status: {
+      type: String,
+      enum: [
+        'pending',
+        'confirmed',
+        'cancelled',
+        'returned',
+        'processing',
+        'dispatching',
+        'shipped',
+        'delivered',
+        'aborted'
+      ],
+      default: 'pending'
+    },
+    paymentMethod: {
+      type: String,
+      enum: ['card', 'credit card', 'debit card', 'paypal', 'UPI'],
+      default: 'card'
+    }
   },
-  items: {
-    type: [
-      {
-        product: { type: ObjectId, ref: 'Product' },
-        quantity: Number
-      }
-    ]
-  },
-  totalAmount: {
-    type: Number
-  },
-  shippingAdderess: {
-    type: String
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'processing', 'shipped', 'delivered'],
-    default: 'pending'
-  },
-  paymentMethod: {
-    type: String,
-    enum: ['card', 'credit card', 'debit card', 'paypal', 'UPI']
+  {
+    timestamps: true
   }
-})
+);
 
-orderSchema.pre(/^find/, async function (next) {
-  this.populate({
-    path: 'customer',
-    select: '_id username profilePic '
-  })
-  this.populate({
-    path: 'items.product',
-    select: '_id name imageUrl price'
-  })
-  next()
-})
+orderSchema.pre('findOne', function (next) {
+  // Check if the query is for an _id (which findById uses)
+  if (Object.prototype.hasOwnProperty.call(this.getQuery(), '_id')) {
+  }
+  next();
+});
 
-const Order = mongoose.model('Order', orderSchema)
-module.exports = Order
+const Order = mongoose.model('Order', orderSchema);
+module.exports = Order;

@@ -36,3 +36,14 @@ export const signUp = async ({
     throw new Error(error.response.data.message);
   }
 };
+
+export const logout = async () => {
+  try {
+    await axios("users/logout", {
+      method: "POST",
+    });
+    return null;
+  } catch (error) {
+    throw new Error(error.response.data.message);
+  }
+};

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Title from "../../ui/Title";
 
 function ProductCatalog() {
@@ -5,25 +6,30 @@ function ProductCatalog() {
     <div className="m-4 rounded-lg bg-stone-300 px-4 py-2">
       <Title>Browse by categories</Title>
       <CatalogRow>
-        <CatlogItem name={"shirts"} img="shirts.webp" />
-        <CatlogItem name={"jeans"} img="jeans.webp" grow={true} />
+        <CatlogItem name={"shirts"} img="bg-shirts" />
+        <CatlogItem name={"jeans"} img="bg-jeans" grow={true} />
       </CatalogRow>
       <CatalogRow>
-        <CatlogItem name={"shoes"} img="shoes.webp" grow={true} />
-        <CatlogItem name={"accessories"} img="accessories.webp" />
+        <CatlogItem name={"shoes"} img="bg-shoes" grow={true} />
+        <CatlogItem name={"accessories"} img="bg-accessories" />
       </CatalogRow>
     </div>
   );
 }
 
 function CatlogItem({ name, img, grow }) {
+  const navigate = useNavigate();
+  const navigateToCategory = (e) => {
+    e.preventDefault();
+    navigate(`/shop?category=${name}`);
+  };
   return (
     <div
-      className={`relative h-40 min-w-64 rounded-lg bg-[url('${img}')] bg-cover bg-center  bg-no-repeat ${grow && "flex-grow"}`}
+      className={`${img} relative flex h-40 min-w-64 cursor-pointer items-center justify-center rounded-lg bg-cover bg-center bg-no-repeat text-transparent transition-all hover:text-white ${grow && "flex-grow"} group`}
+      onClick={navigateToCategory}
     >
-      <h3 className="absolute left-4 top-4  text-lg font-semibold capitalize">
-        {name}
-      </h3>
+      <div className="absolute inset-0 rounded-lg bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-60"></div>
+      <h3 className="relative z-10 text-lg font-semibold capitalize">{name}</h3>
     </div>
   );
 }

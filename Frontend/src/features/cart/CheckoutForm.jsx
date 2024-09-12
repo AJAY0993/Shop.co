@@ -3,6 +3,7 @@ import { getLoggedInUser } from "../user/userSlice";
 import Row from "../../ui/Row";
 import Button from "../../ui/Button";
 import ProtectRoute from "../../ui/ProtectRoute";
+import { Navigate } from "react-router-dom";
 
 function CheckoutForm({ onSubmit, isCheckingOut }) {
   const user = useSelector(getLoggedInUser);
@@ -13,6 +14,7 @@ function CheckoutForm({ onSubmit, isCheckingOut }) {
   };
   const inputClass =
     "block flex-grow  rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-stone-500 focus:ring-stone-500  ";
+  if (!user) return <Navigate replace to="/login" />;
   return (
     <ProtectRoute>
       <div className="min-w-72 rounded-lg bg-neutral-50 p-4">

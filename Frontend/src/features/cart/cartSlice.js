@@ -1,5 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// interface Item {
+//   color: string;
+//   imageUrl: string;
+//   name: string;
+//   price: {
+//     current: {
+//
+//     },
+//     currency: string;
+//   };
+//   quantity: number;
+//   size: string;
+//   _id: string;
+// }
 function storeCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -85,5 +99,10 @@ export const getDiscount = (state) =>
       0,
     )
     .toFixed(2);
-
+export const orderItems = (state) => {
+  return state.cart.cartItems.map((cartItem) => ({
+    _id: cartItem._id,
+    quantity: cartItem.quantity,
+  }));
+};
 export default cartSlice.reducer;

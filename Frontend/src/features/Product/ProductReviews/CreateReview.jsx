@@ -15,7 +15,7 @@ function CreateReview({ close }) {
   };
 
   return (
-    <form className="my-2 sm:my-3" onSubmit={handleCreateReview}>
+    <form className="my-2 mb-16 block sm:my-3" onSubmit={handleCreateReview}>
       <Row>
         <input
           className="border-bottom-2  flex-grow border-0 border-transparent outline-0 transition-all focus:border-0 focus:border-b-2 focus:border-stone-900"

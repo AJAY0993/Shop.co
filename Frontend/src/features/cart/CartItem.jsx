@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import Row from "../../ui/Row";
 import Button from "./../../ui/Button";
-import { addItem, getItemQuantity, removeItem } from "./cartSlice";
+import { getItemQuantity, removeItem } from "./cartSlice";
 import CartController from "./CartController";
 import { useDispatch, useSelector } from "react-redux";
 

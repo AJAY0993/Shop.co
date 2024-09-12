@@ -1,98 +1,123 @@
 /* eslint-disable no-underscore-dangle */
-require('dotenv').config({ path: '../.env' })
-const stripe = require('stripe')(process.env.STRIPE_TEST_KEY)
-const Order = require('../models/Order')
-const AppError = require('../utils/AppError')
+const mongoose = require('mongoose');
+const stripe = require('stripe')(process.env.STRIPE_TEST_KEY);
+const Order = require('../models/Order');
+const AppError = require('../utils/AppError');
+const OrderDetail = require('../models/OrderDetails');
+
+const discountedPrice = (price) => {
+  const pInCents = Number(price.current.value) * 100; //  Price in cents
+  const p = pInCents; // Product price in cents
+  const d = Number(price.current.discount); // Discount percentage
+  return Math.floor(p - (p * d) / 100); // Discounted Price
+};
 
 const checkoutService = async (req, res, next) => {
-  const tempOrder = {
-    customer: req.user._id,
-    items: req.body.items.map((item) => ({
-      product: item._id,
-      quantity: item.quantity
-    })),
-    shippingAdderess: req.body.shippingAdderess,
-    paymentMethod: 'card'
-  }
-  let newOrder
   try {
-    const { items } = req.body
-    const itemsWithUnitPriceInPaise = items.map((item) => {
-      const tempItem = { ...item }
-      const discount = 1 - item.price.current.discount / 100
-      tempItem.unitAmountInPaise = Math.round(
-        item.price.current.value * discount * 100 * 84
-      )
-      return tempItem
-    })
-
-    const lineItems = itemsWithUnitPriceInPaise.map((item) => ({
+    const { items, shippingAdderess } = req.body;
+    const lineItems = items.map((item) => ({
       price_data: {
         currency: 'inr',
         product_data: {
           name: item.name,
           images: [item.imageUrl]
         },
-        unit_amount: item.unitAmountInPaise
+        unit_amount: discountedPrice(item.price)
       },
       quantity: item.quantity
-    }))
+    }));
 
-    newOrder = await Order.create(tempOrder)
+    const newOrder = await Order.create({
+      status: 'pending',
+      shippingAdderess,
+      customer: req.user.id,
+      paymentMethod: 'card'
+    });
 
+    const promises = items.map(async (item) => {
+      return await OrderDetail.create({
+        orderId: newOrder._id,
+        product: item.id || item._id,
+        quantity: item.quantity
+      });
+    });
+
+    await Promise.all(promises);
+
+    // META DATA TO ADD PRODUCTS ON SUCCESS OF CHECKOUT
+    const metadata = {
+      orderId: newOrder._id.toString()
+    };
+    // NEW SESSION //
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: `${req.protocol}://${req.get('host')}/order/${newOrder._id}`,
-      cancel_url: 'http://localhost:5173/home'
-    })
+      success_url:
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:5173/me/myOrders' // Added http://
+          : `${req.protocol}://${req.get('host')}/me/myOrders`,
 
-    tempOrder.totalAmount = await Order.findByIdAndUpdate(newOrder._id, {
-      totalAmount: session.amount_total / 100 / 84
-    })
+      cancel_url: 'http://localhost:5173/home',
+      metadata
+    });
 
-    res.json({ status: 'success', data: { session } })
+    res.json({ status: 'success', data: { session } });
   } catch (err) {
-    await Order.findByIdAndDelete(newOrder._id)
+    console.log(err);
     next(
       new AppError(
         500,
         'Something went wrong while checking out please try again later'
       )
-    )
+    );
   }
-}
+};
 
-const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET
+const webhookHandler = async (request, response) => {
+  const endpointSecret = process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET;
+  const sig = request.headers['stripe-signature'];
 
-const webhookHandler = (request, response, next) => {
-  const sig = request.headers['stripe-signature']
-
-  let event
+  let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret)
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
   } catch (err) {
-    return next(new AppError(400, `Webhook Error: ${err.message}`))
+    response.status(400).send(`Webhook Error: ${err.message}`);
+    return;
   }
 
   // Handle the event
-  console.log(event.data.object)
   switch (event.type) {
-    case 'charge.succeeded':
-      // Then define and call a function to handle the event charge.succeeded
-      break
+    case 'checkout.session.async_payment_failed':
+      const checkoutSessionAsyncPaymentFailed = event.data.object;
+      // Then define and call a function to handle the event checkout.session.async_payment_failed
+      break;
+    case 'checkout.session.async_payment_succeeded':
+      // Then define and call a function to handle the event checkout.session.async_payment_succeeded
+      console.log('session succeeded', body);
+      break;
     case 'checkout.session.completed':
-      console.log(event.data.object)
-      break
+      const checkoutSessionCompleted = event.data.object;
+
+      // Accessing the orderId from metadata
+      const orderId = checkoutSessionCompleted.metadata.orderId;
+      try {
+        await Order.findByIdAndUpdate(orderId, {
+          status: 'confirmed'
+        });
+      } catch (err) {
+        console.log(`Some thing went wrong Order id${orderId}`);
+      }
+      // Then define and call a function to handle the event checkout.session.completed
+      break;
     // ... handle other event types
     default:
-      console.log(`Unhandled event type ${event.type}`)
+      console.log(`Unhandled event type ${event.type}`);
   }
 
   // Return a 200 response to acknowledge receipt of the event
-  response.send()
-}
+  response.send();
+};
 
-module.exports = { webhookHandler, checkoutService }
+module.exports = { webhookHandler, checkoutService };

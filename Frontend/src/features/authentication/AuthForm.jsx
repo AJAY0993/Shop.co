@@ -49,7 +49,10 @@ const Form = function Form({
   );
 };
 // eslint-disable-next-line react/display-name
-const Row = forwardRef(function ({ label, placeholder, name }, ref) {
+const Row = forwardRef(function (
+  { label, placeholder, name, type = "text" },
+  ref,
+) {
   return (
     <div className="my-6 flex flex-col justify-start">
       <label className="my-1 font-medium" htmlFor={name}>
@@ -61,6 +64,7 @@ const Row = forwardRef(function ({ label, placeholder, name }, ref) {
         name={name}
         id={name}
         ref={ref}
+        type={type}
       />
     </div>
   );
