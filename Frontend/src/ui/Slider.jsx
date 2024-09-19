@@ -11,7 +11,6 @@ function Slider({ title, query = "" }) {
     setIsLoading(true);
     fetchProducts(query)
       .then(setProducts)
-      .then((data) => console.log(data))
       .finally(() => setIsLoading(false));
   }, []);
 

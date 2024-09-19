@@ -6,7 +6,6 @@ function StarRating({ rating, maxRating, color = "#FFC633", size = "1rem" }) {
   const numFilledStar = Math.floor(rating);
   const numHalfStar = Math.ceil(rating - numFilledStar);
   const numEmptyStar = maxRating - (numFilledStar + numHalfStar);
-
   return (
     <div>
       <ul className="flex gap-2">

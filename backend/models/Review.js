@@ -15,7 +15,8 @@ const reviewSchema = new Schema(
       ref: 'User'
     },
     review: {
-      type: String
+      type: String,
+      default: ''
     },
     rating: {
       type: Number,

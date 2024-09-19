@@ -20,8 +20,7 @@ const getOrders = catchAsync(async (req, res) => {
 const getMyOrders = catchAsync(async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const orders = await Order.find({
-    customer: req.user._id,
-    status: { $ne: 'pending' }
+    customer: req.user._id
   })
   res.json({
     status: 'success',

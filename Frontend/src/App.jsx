@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { Navigate } from "react-router-dom";
 import AuthCheck from "./features/authentication/AuthCheck";
 import ProtectRoute from "./ui/ProtectRoute";
 import UserOrders from "./features/user/UserOrders";
@@ -53,7 +54,10 @@ function App() {
                     </ProtectRoute>
                   }
                 >
-                  <Route index element={<UserBasicDetails />} />
+                  <Route
+                    index
+                    element={<Navigate to="basicDetails" replace />}
+                  />
                   <Route path="basicDetails" element={<UserBasicDetails />} />
                   <Route path="myOrders" element={<UserOrders />} />
                 </Route>

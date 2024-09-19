@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = {
   env: {
     browser: true,
@@ -21,8 +23,8 @@ module.exports = {
   },
   rules: {
     // Enforce stricter linting rules that will flag potential issues
+    'no-console': 'off',
     'no-unused-vars': 'error', // Disallow unused variables
-    'no-console': 'error', // Disallow use of console (useful in production code)
     eqeqeq: ['error', 'always'], // Enforce strict equality (=== and !==)
     curly: 'error', // Require curly braces for all control statements
     'no-var': 'error', // Disallow use of var, prefer let/const

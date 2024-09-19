@@ -17,7 +17,7 @@ function ProductReviewsContainer() {
     <Container>
       <div className="my-2 px-4 sm:my-4">
         <Row classes="flex justify-between items-center my-2">
-          <Subtitle className="my-3">All reviews</Subtitle>
+          <Subtitle className="my-3 font-bold">Reviews and Rating</Subtitle>
           {!showCreateReviewForm && (
             <Button
               type="primary"

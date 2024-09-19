@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { searchProducts } from "../../services/productApi";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../ui/Modal";
+import StarRating from "../../ui/StarRating";
 
 function Search() {
-  const [focus, setFocus] = useState(false);
   const [query, setQuery] = useState("");
   const [products, setProducts] = useState([]);
-
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
@@ -17,45 +17,36 @@ function Search() {
       if (query) {
         const result = await searchProducts(query);
         setProducts(result);
-        console.log(query);
       }
     }, 500);
     return () => clearTimeout(timerId);
   }, [query]);
 
   return (
-    <div
-      className="relative"
-      onBlur={() => {
-        setQuery("");
-        setFocus(false);
-      }}
-    >
-      <div className=" ml-auto md:ml-0">
-        <label
-          htmlFor="search"
-          className="absolute right-2 top-1/2 -translate-y-1/2  cursor-pointer"
-        >
+    <Modal>
+      <Modal.Open id="search-box">
+        <button>
           <FaSearch />
-        </label>
-        <input
-          id="search"
-          className="w-0 rounded-full px-2 py-1 transition-all md:px-4 md:py-2 md:focus:w-80"
-          placeholder="Type here to search"
-          onChange={handleChange}
-          onFocus={() => setFocus(true)}
-        />
-      </div>
-      {focus && (
-        <div className="bottom-[-calc(100%  + 1rem)] absolute  z-50 bg-neutral-50">
-          <ul className="space-y-4">
-            {products.map((item) => (
-              <SearchItem item={item} key={item._id} />
+        </button>
+      </Modal.Open>
+      <Modal.Window id="search-box">
+        <div className="md:h-90vh absolute left-[10%] top-[12.5%] flex h-[75dvh] min-h-[30rem] w-[80%] flex-col items-center overflow-auto rounded-md bg-white text-neutral-700">
+          <div className="mb-2 w-full border-b-2">
+            <input
+              className="w-full rounded-md border-0 px-4 py-2 focus:outline-none"
+              placeholder="Puma shoes..."
+              onChange={handleChange}
+              autoFocus
+            />
+          </div>
+          <ul className="flex flex-wrap justify-center gap-4 px-4">
+            {products.map((product) => (
+              <SearchItem item={product} key={product._id} />
             ))}
           </ul>
         </div>
-      )}
-    </div>
+      </Modal.Window>
+    </Modal>
   );
 }
 
@@ -63,20 +54,21 @@ function SearchItem({ item }) {
   const navigate = useNavigate();
   return (
     <li
-      className="flex cursor-pointer justify-between gap-2 "
+      className="mt-2 flex w-full min-w-[300px] cursor-pointer gap-2 overflow-hidden rounded-sm bg-neutral-800 text-white sm:w-full md:w-[calc(50%-16px)]"
       onClick={(e) => {
         e.preventDefault();
-        navigate(`/${item._id}`);
-        alert("booga booga boo");
+        navigate(`/shop/${item._id}`);
       }}
     >
       <img
         src={item.imageUrl}
         alt={item.name}
-        className="aspect-square w-[3rem]
-"
+        className="aspect-square w-[3rem] object-cover"
       />
-      <p>{item.name.slice(0, 30) + "..."}</p>
+      <div>
+        <p className="text-sm">{item.name}</p>
+        <StarRating rating={item.rating} size="1rem" />
+      </div>
     </li>
   );
 }

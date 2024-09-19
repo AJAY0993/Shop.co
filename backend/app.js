@@ -17,12 +17,10 @@ const app = express()
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.WHITELIST_URL,
     credentials: true
   })
 )
-app.use(cookieParser())
-app.use(express.urlencoded({ extended: true }))
 app.use(morgan('tiny'))
 app.use(express.static(path.join(__dirname, 'public')))
 app.post(
@@ -34,7 +32,9 @@ app.post(
   webhookHandler
 )
 
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(cookieParser())
 
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/reviews', reviewRouter)
