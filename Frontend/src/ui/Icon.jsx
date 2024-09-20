@@ -1,9 +1,12 @@
-function Icon({ children, classes }) {
+function LinkIcon({ children, to, className }) {
   return (
-    <span className="aspect-square cursor-pointer overflow-hidden rounded-full bg-stone-300 p-2">
+    <a
+      href={to}
+      className={`aspect-square cursor-pointer overflow-hidden rounded-full bg-stone-300 p-2 ${className}`}
+    >
       {children}
-    </span>
+    </a>
   );
 }
 
-export default Icon;
+export default LinkIcon;

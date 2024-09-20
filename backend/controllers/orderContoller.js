@@ -8,7 +8,7 @@ const AppError = require('../utils/AppError')
 const getOrders = catchAsync(async (req, res) => {
   const orederFeatures = new ApiFeatures(Order.find(), req.query)
   const orders = await orederFeatures.query
-  res.json({
+  return res.json({
     status: 'success',
     message: 'orders fetched successfully',
     data: {
@@ -20,9 +20,10 @@ const getOrders = catchAsync(async (req, res) => {
 const getMyOrders = catchAsync(async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const orders = await Order.find({
-    customer: req.user._id
+    customer: req.user._id,
+    status: { $ne: 'pending' }
   })
-  res.json({
+  return res.json({
     status: 'success',
     message: 'orders fetched successfully',
     data: {
@@ -35,11 +36,12 @@ const getOrderById = catchAsync(async (req, res, next) => {
   const order = await Order.findById(req.params.id)
   if (!order) return next(new AppError(400, 'No order found'))
   const orderDetails = await OrderDetail.find({ orderId: order._id })
-  res.json({
+  return res.json({
     status: 'success',
     message: 'order fetched successfully',
     data: {
-      order
+      order,
+      orderItems: orderDetails
     }
   })
 })
@@ -52,7 +54,7 @@ const cancelOrder = catchAsync(async (req, res) => {
     },
     { new: true }
   )
-  res.json({
+  return res.json({
     status: 'success',
     message: 'orders cancelled successfully',
     data: {

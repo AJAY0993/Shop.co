@@ -14,7 +14,13 @@ function UserOrders() {
       <List
         className=""
         items={orders}
-        render={(order) => <OrderHeader status={order.status} id={order._id} />}
+        render={(order) => (
+          <OrderHeader
+            status={order.status}
+            id={order._id}
+            createdAt={order.createdAt}
+          />
+        )}
         emptyListItem={
           <NoMatchFound message="You have not ordered anything yet start ordering now" />
         }

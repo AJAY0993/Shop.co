@@ -1,3 +1,0 @@
-import{r as t,j as e,B as i}from"./index-Dxkm9OBN.js";import{a as x}from"./ProductItem-DqHoiunD.js";import{a as m}from"./Header-DiS-RBAy.js";
-
-function u({title:o,query:r=""}){const[c,l]=t.useState([]); const [n,a]=t.useState(!1);return t.useEffect(()=>{a(!0),m(r).then(l).then(s=>console.log(s)).finally(()=>a(!1))},[]),e.jsxs("section",{className:"px-4",children:[e.jsx("h2",{className:"my-4 text-center text-2xl font-extrabold uppercase",children:o}),e.jsx("div",{className:"flex justify-between gap-4 overflow-x-scroll p-3 ",children:!n&&c.map(s=>e.jsx(x,{product:s},s.name))}),e.jsx("div",{className:" mx-auto w-52",children:e.jsx(i,{type:"secondary",to:"/shop",children:"View All"})})]})}export{u as S};

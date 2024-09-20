@@ -1,9 +1,14 @@
 import Subtitle from "../../ui/Subtitle";
+import { formatDateToHumanReadable } from "../../utils/helper";
 
-function OrderHeader({ id, status }) {
+function OrderHeader({ id, status, createdAt }) {
   return (
-    <header className="flex justify-between py-2">
+    <header className="flex items-center justify-between py-2">
       <Subtitle>Order #{id.slice(0, 5)} Status</Subtitle>
+      <p>
+        <span className="font-medium">Ordered at </span>
+        {formatDateToHumanReadable(createdAt)}
+      </p>
       <OrderStatusIndiactor status={status} />
     </header>
   );

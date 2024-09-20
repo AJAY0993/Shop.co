@@ -1,5 +1,5 @@
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
-import Icon from "./Icon";
+import LinkIcon from "./Icon";
 import P from "./P";
 import Row from "./Row";
 import Title from "./Title";
@@ -18,15 +18,15 @@ function Footer() {
             Doloremque alias porro sunt magnam m?
           </P>
           <Row classes="gap-2 pb-4">
-            <Icon>
+            <LinkIcon to="https://github.com/AJAY0993">
               <FaGithub className="" />
-            </Icon>
-            <Icon>
+            </LinkIcon>
+            <LinkIcon to="https://www.linkedin.com/in/ajay-prakash-mishra-638b23259/">
               <FaLinkedin />
-            </Icon>
-            <Icon>
+            </LinkIcon>
+            <LinkIcon to="https://x.com/AjayPra88777142">
               <FaTwitter />
-            </Icon>
+            </LinkIcon>
           </Row>
         </div>
         <Ul heading="company">
