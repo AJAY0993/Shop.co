@@ -1,0 +1,1 @@
+import{j as r}from"./index-00F4N1Wb.js";import{N as s,F as t}from"./NewsletterSubscriptionForm-BeEsRt-B.js";import{H as e}from"./Header-CF4FsExV.js";function p({children:o}){return r.jsxs(r.Fragment,{children:[r.jsx(e,{}),o,r.jsx(s,{}),r.jsx(t,{})]})}export{p as A};

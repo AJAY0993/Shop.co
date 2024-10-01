@@ -6,7 +6,7 @@ import Row from "./../../ui/Row";
 import Container from "../../ui/Container";
 import ProductPrice from "./ProductPrice";
 import CartController from "../cart/CartController";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addItem, getItemQuantity } from "../cart/cartSlice";
@@ -73,11 +73,11 @@ function ProductOverview({ product }) {
 function Color({ color, onChange }) {
   const handleChange = (e) => {
     e.preventDefault();
-    onChange((s) => e.target.id);
+    onChange(() => e.target.id);
   };
   return (
     <div
-      className={`aspect-square w-12 rounded-full ${color}`}
+      className={`aspect-square w-10 rounded-full border-2 ${color}`}
       onClick={handleChange}
     ></div>
   );
